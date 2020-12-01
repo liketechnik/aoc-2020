@@ -2,6 +2,16 @@
 #
 # SPDX-License-Identifier: CC0-1.0
 
-[workspace]
-members = ["aoc_day1"]
-exclude = []
+[package]
+name = "aoc2020"
+version = "0.1.0"
+authors = ["Florian Warzecha <liketechnik@disroot.org>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0"
+aoc-runner = "0.3"
+aoc-runner-derive = "0.3"
+itertools = "0.9"
