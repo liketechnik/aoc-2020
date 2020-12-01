@@ -6,7 +6,13 @@ use anyhow::{anyhow, Result};
 use itertools::Itertools;
 
 fn main() -> Result<()> {
-    let expenses: Vec<usize> = include_str!("../input").lines().map(|line| line.parse::<usize>().map_err(|e| anyhow!("Failed to parse '{}': {:?}", line, e))).collect::<Result<Vec<usize>>>()?;
+    let expenses: Vec<usize> = include_str!("../input")
+        .lines()
+        .map(|line| {
+            line.parse::<usize>()
+                .map_err(|e| anyhow!("Failed to parse '{}': {:?}", line, e))
+        })
+        .collect::<Result<Vec<usize>>>()?;
 
     Ok(expenses
         .iter()
@@ -38,7 +44,7 @@ fn main() -> Result<()> {
             if input.0 + input.1 + input.2 == 2020 {
                 Some((input.0, input.1, Some(input.2)))
             } else if input.0 + input.1 == 2020 {
-                Some((input.0, input.1, None))    
+                Some((input.0, input.1, None))
             } else {
                 None
             }
@@ -53,5 +59,6 @@ fn main() -> Result<()> {
                 sum.0 + sum.1 + sum.2.unwrap_or(&0usize),
                 sum.0 * sum.1 * sum.2.unwrap_or(&1usize)
             );
-        }).collect())
+        })
+        .collect())
 }
