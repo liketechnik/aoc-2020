@@ -14,7 +14,7 @@ fn main() -> Result<()> {
         })
         .collect::<Result<Vec<usize>>>()?;
 
-    Ok(expenses
+    expenses
         .iter()
         .enumerate()
         // create unique tuples of expense to expense to expense mapping
@@ -60,5 +60,7 @@ fn main() -> Result<()> {
                 sum.0 * sum.1 * sum.2.unwrap_or(&1usize)
             );
         })
-        .collect())
+        .for_each(drop);
+
+    Ok(())
 }
