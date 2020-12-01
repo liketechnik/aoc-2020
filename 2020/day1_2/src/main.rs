@@ -29,14 +29,14 @@ fn main() -> Result<()> {
                         .1
                         .iter(),
                 )
-                .map(move |input2| (input1, input2))
+                .map(move |input2| (input1.1, input2))
         })
         .flat_map(|input12| {
             expenses
-                .split_at(std::cmp::max(input12.0 .0, input12.1 .0))
+                .split_at(input12.1 .0)
                 .1
                 .iter()
-                .map(move |input3| (input12.0 .1, input12.1 .1, input3))
+                .map(move |input3| (input12.0, input12.1 .1, input3))
         })
         // filter out mappings of exactly the same value (determined by index)
         // and keep only the ones which sum to 2020
