@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Florian Warzecha <liketechnik@disroot.org>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+[workspace]
+members = ["aoc_day1"]
+exclude = []
