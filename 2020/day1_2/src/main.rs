@@ -3,18 +3,12 @@
 // SPDX-License-Identifier: MPL-2.0
 
 use anyhow::{anyhow, Result};
-use std::fs::File;
-use std::io::BufRead;
-use std::io::BufReader;
+use itertools::Itertools;
 
 fn main() -> Result<()> {
-    let f = File::open("input").map_err(|e| anyhow!("Failed to open 'input': {:?}", e))?;
-    let f = BufReader::new(f);
+    let expenses: Vec<usize> = include_str!("../input").lines().map(|line| line.parse::<usize>().map_err(|e| anyhow!("Failed to parse '{}': {:?}", line, e))).collect::<Result<Vec<usize>>>()?;
 
-    let expenses: Result<Vec<usize>> = f.lines().map(parse_line).collect();
-    let expenses = expenses?;
-
-    let sums = expenses
+    Ok(expenses
         .iter()
         .enumerate()
         // create unique tuples of expense to expense to expense mapping
@@ -42,28 +36,22 @@ fn main() -> Result<()> {
         // and keep only the ones which sum to 2020
         .filter_map(|input| {
             if input.0 + input.1 + input.2 == 2020 {
-                Some((input.0, input.1, input.2))
+                Some((input.0, input.1, Some(input.2)))
+            } else if input.0 + input.1 == 2020 {
+                Some((input.0, input.1, None))    
             } else {
                 None
             }
-        });
-
-    for sum in sums {
-        println!(
-            "Found {} + {} + {} = {}, product is {}",
-            sum.0,
-            sum.1,
-            sum.2,
-            sum.0 + sum.1 + sum.2,
-            sum.0 * sum.1 * sum.2
-        );
-    }
-
-    Ok(())
-}
-
-fn parse_line(line: Result<String, std::io::Error>) -> Result<usize> {
-    let line = line?;
-    line.parse()
-        .map_err(|e| anyhow!("Failed to parse {} into usize: {:?}", line, e))
+        })
+        .unique()
+        .map(|sum| {
+            println!(
+                "Found {} + {} + {:?} = {}, product is {}",
+                sum.0,
+                sum.1,
+                sum.2,
+                sum.0 + sum.1 + sum.2.unwrap_or(&0usize),
+                sum.0 * sum.1 * sum.2.unwrap_or(&1usize)
+            );
+        }).collect())
 }
