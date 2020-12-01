@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 [package]
-name = "day1_1"
+name = "aoc_day1"
 version = "0.1.0"
 authors = ["Florian Warzecha <liketechnik@disroot.org>"]
 edition = "2018"
