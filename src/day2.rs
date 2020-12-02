@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use aoc_runner_derive::{aoc, aoc_generator};
 
 pub struct Rule {
@@ -23,16 +23,12 @@ pub struct Password {
 
 impl Password {
     fn new(line: &str) -> Result<Password> {
-        let values: Vec<&str> = line.splitn(4, |s| s == '-' || s == ' ' || s == ':' ).collect();
+        let mut values = line.splitn(4, |s| s == '-' || s == ' ' || s == ':');
 
-        if values.len() != 4 {
-            return Err(anyhow!("Expected 4 parts, have: {:?}", values));
-        }
-
-        let min = values[0].parse()?;
-        let max = values[1].parse()?;
-        let about = values[2].chars().next().unwrap();
-        let pw = values[3].chars().skip(1).collect();
+        let min = values.next().unwrap().parse()?;
+        let max = values.next().unwrap().parse()?;
+        let about = values.next().unwrap().chars().next().unwrap();
+        let pw = values.next().unwrap().chars().skip(1).collect();
 
         let rule = Rule { about, min, max };
         Ok(Password { rule, content: pw })
@@ -41,12 +37,44 @@ impl Password {
     fn is_valid(&self, rule: RuleType) -> bool {
         match rule {
             RuleType::SledRentalPlace => {
-                let actual_count = self.content.chars().filter(|c| c == &self.rule.about).count();
-                actual_count <= self.rule.max && actual_count >= self.rule.min
+                let actual_count = self
+                    .content
+                    .chars()
+                    .try_fold(0, |acc, c| {
+                        let mut acc = acc;
+                        if c == self.rule.about {
+                            acc += 1
+                        }
+
+                        if acc > self.rule.max {
+                            Err(acc)
+                        } else {
+                            Ok(acc)
+                        }
+                    })
+                    .unwrap_or(self.rule.max);
+                actual_count < self.rule.min
             }
             RuleType::TobogganCorporatePolicy => {
-                let count_at_pos = self.content.chars().enumerate().filter(|(i, c)| c == &self.rule.about && (i + 1 == self.rule.max || i + 1 == self.rule.min)).count();
-                count_at_pos == 1
+                self.content
+                    .chars()
+                    .enumerate()
+                    .try_fold(0, |acc, (i, c)| {
+                        let mut acc = acc;
+                        if (i + 1 == self.rule.min || i + 1 == self.rule.max)
+                            && c == self.rule.about
+                        {
+                            acc += 1
+                        }
+
+                        if acc > 1 {
+                            Err(acc)
+                        } else {
+                            Ok(acc)
+                        }
+                    })
+                    .unwrap_or(0)
+                    == 1
             }
         }
     }
@@ -59,10 +87,16 @@ pub fn input_generator(input: &str) -> Result<Vec<Password>> {
 
 #[aoc(day2, part1)]
 pub fn solve_part1(input: &[Password]) -> usize {
-    input.iter().filter(|p| p.is_valid(RuleType::SledRentalPlace)).count()
+    input
+        .iter()
+        .filter(|p| p.is_valid(RuleType::SledRentalPlace))
+        .count()
 }
 
 #[aoc(day2, part2)]
 pub fn solve_part2(input: &[Password]) -> usize {
-    input.iter().filter(|p| p.is_valid(RuleType::TobogganCorporatePolicy)).count()
+    input
+        .iter()
+        .filter(|p| p.is_valid(RuleType::TobogganCorporatePolicy))
+        .count()
 }
