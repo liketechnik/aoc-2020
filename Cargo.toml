@@ -13,4 +13,4 @@ edition = "2018"
 [dependencies]
 anyhow = "1.0"
 itertools = "0.9"
-aoc-next = { git = "https://gitlab.com/liketechnik/aoc-next", branch = "main" }
+aoc-next = "0.1"

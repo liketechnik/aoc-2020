@@ -4,6 +4,7 @@ use aoc_next::{aoc_main, Aoc, solver, failable_parser, solution};
 use aoc2020::{day1, day2};
 
 const AOC: Aoc = Aoc {
+    allow_download: true,
     year: 2020,
     solutions: &[
         solution!{1, failable_parser!{ day1::input_generator }, solver!{ day1::solve_part1 }},
