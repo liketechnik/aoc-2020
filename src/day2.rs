@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
 use anyhow::Result;
-use aoc_runner_derive::{aoc, aoc_generator};
 
 pub struct Rule {
     about: char,
@@ -80,21 +79,18 @@ impl Password {
     }
 }
 
-#[aoc_generator(day2)]
 pub fn input_generator(input: &str) -> Result<Vec<Password>> {
     input.lines().map(Password::new).collect()
 }
 
-#[aoc(day2, part1)]
-pub fn solve_part1(input: &[Password]) -> usize {
+pub fn solve_part1(input: Vec<Password>) -> usize {
     input
         .iter()
         .filter(|p| p.is_valid(RuleType::SledRentalPlace))
         .count()
 }
 
-#[aoc(day2, part2)]
-pub fn solve_part2(input: &[Password]) -> usize {
+pub fn solve_part2(input: Vec<Password>) -> usize {
     input
         .iter()
         .filter(|p| p.is_valid(RuleType::TobogganCorporatePolicy))

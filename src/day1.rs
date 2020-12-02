@@ -3,9 +3,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 use anyhow::{anyhow, Result};
-use aoc_runner_derive::{aoc, aoc_generator};
 
-#[aoc_generator(day1)]
 pub fn input_generator(input: &str) -> Result<Vec<usize>> {
     input
         .lines()
@@ -16,8 +14,7 @@ pub fn input_generator(input: &str) -> Result<Vec<usize>> {
         .collect()
 }
 
-#[aoc(day1, part1)]
-pub fn solve_part1(input: &[usize]) -> String {
+pub fn solve_part1(input: Vec<usize>) -> String {
     input
         .iter()
         .enumerate()
@@ -44,8 +41,7 @@ pub fn solve_part1(input: &[usize]) -> String {
         .collect()
 }
 
-#[aoc(day1, part2)]
-pub fn solve_part2(input: &[usize]) -> String {
+pub fn solve_part2(input: Vec<usize>) -> String {
     input
         .iter()
         .enumerate()
