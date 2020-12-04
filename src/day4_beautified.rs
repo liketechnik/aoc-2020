@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 use crate::parse_number;
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum Unit {
@@ -19,7 +19,6 @@ pub struct Passport {
     hcl: Option<String>,
     ecl: Option<String>,
     pid: Option<String>,
-    cid: Option<Result<u64>>,
 }
 
 impl Passport {
@@ -71,12 +70,11 @@ impl Passport {
             .map(|part| {
                 if let Some(part) = part.strip_prefix("hgt:")?.strip_suffix("cm") {
                     Some((part, Unit::Cm))
+                } else if let Some(part) = part.strip_prefix("hgt:")?.strip_suffix("in") {
+                    Some((part, Unit::In))
                 } else {
-                    if let Some(part) = part.strip_prefix("hgt:")?.strip_suffix("in") {
-                        Some((part, Unit::In))
-                    } else {
-                        None
-                    }
+                    Some(("abc", Unit::In)) // yeah, it would be cleaner to have another option inside here,
+                                            // instead of forcing the parsing to fail below
                 }
             })
             .collect::<Vec<Option<(&str, Unit)>>>()
@@ -127,19 +125,6 @@ impl Passport {
                     None
                 }
             });
-        let cid = fields
-            .clone()
-            .filter(|part| part.contains("cid:"))
-            .map(|part| part.strip_prefix("cid:"))
-            .collect::<Vec<Option<&str>>>()
-            .get(0)
-            .and_then(|content| {
-                if let Some(content) = content {
-                    Some(parse_number!(content))
-                } else {
-                    None
-                }
-            });
 
         Passport {
             byr,
@@ -149,7 +134,6 @@ impl Passport {
             hcl,
             ecl,
             pid,
-            cid,
         }
     }
 

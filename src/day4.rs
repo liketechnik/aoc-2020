@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-use anyhow::{anyhow, Result};
-
 #[derive(Clone, Copy, PartialEq)]
 pub enum Unit {
     Cm,
@@ -18,11 +16,10 @@ pub struct Passport {
     hcl: Option<String>,
     ecl: Option<String>,
     pid: Option<String>,
-    cid: Option<u64>,
 }
 
 impl Passport {
-    pub fn new(input: &str) -> Passport {
+    fn new(input: &str) -> Passport {
         let fields = input.split(char::is_whitespace);
         let byr: Option<u64> = fields
             .clone()
@@ -69,12 +66,10 @@ impl Passport {
             .map(|part| {
                 if let Some(part) = part.strip_prefix("hgt:")?.strip_suffix("cm") {
                     Some((part, Unit::Cm))
+                } else if let Some(part) = part.strip_prefix("hgt:")?.strip_suffix("in") {
+                    Some((part, Unit::In))
                 } else {
-                    if let Some(part) = part.strip_prefix("hgt:")?.strip_suffix("in") {
-                        Some((part, Unit::In))
-                    } else {
-                        None
-                    }
+                    None
                 }
             })
             .collect::<Vec<Option<(&str, Unit)>>>()
@@ -125,19 +120,6 @@ impl Passport {
                     None
                 }
             });
-        let cid: Option<u64> = fields
-            .clone()
-            .filter(|part| part.contains("cid:"))
-            .map(|part| part.strip_prefix("cid:"))
-            .collect::<Vec<Option<&str>>>()
-            .get(0)
-            .and_then(|content| {
-                if let Some(content) = content {
-                    content.parse().ok()
-                } else {
-                    None
-                }
-            });
 
         Passport {
             byr,
@@ -147,7 +129,6 @@ impl Passport {
             hcl,
             ecl,
             pid,
-            cid,
         }
     }
 
