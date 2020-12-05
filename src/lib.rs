@@ -7,6 +7,7 @@ pub mod day2;
 pub mod day3;
 pub mod day4;
 pub mod day4_beautified;
+pub mod day5;
 
 #[macro_export]
 macro_rules! parse_number {
