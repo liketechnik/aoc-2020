@@ -5,7 +5,7 @@
 use anyhow::Result;
 use aoc_next::{aoc_main, failable_parser, parser, solution, solver, Aoc};
 
-use aoc2020::{day1, day2, day3, day4, day4_beautified, day5, day6};
+use aoc2020::{day1, day2, day3, day4, day4_beautified, day5, day6, day5_beautified};
 
 const AOC: Aoc = Aoc {
     allow_download: true,
@@ -27,6 +27,8 @@ const AOC: Aoc = Aoc {
         solution! {5, parser!{ day5::input_generator }, solver!{ day5::solve_part2 }},
         solution! {6, parser!{ day6::input_generator1 }, solver!{ day6::solve_part1 }},
         solution! {6, parser!{ day6::input_generator2 }, solver!{ day6::solve_part2 }},
+        solution! {5, parser!{ day5_beautified::input_generator }, solver!{ day5_beautified::solve_part1 }},
+        solution! {5, parser!{ day5_beautified::input_generator }, solver!{ day5_beautified::solve_part2 }},
     ],
 };
 
