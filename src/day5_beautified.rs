@@ -44,7 +44,7 @@ impl BinarySpacePartition {
     #[inline]
     pub fn value(&self) -> u128 {
         if self.lower_bound != self.upper_bound {
-            panic!("Did not determine the final value yet!"); 
+            panic!("Did not determine the final value yet!");
         }
 
         self.upper_bound
@@ -62,7 +62,7 @@ impl Seat {
                 'F' => row.lower(),
                 'R' => column.upper(),
                 'L' => column.lower(),
-                _ => panic!("Unsupported seat position specififer: {}", c)
+                _ => panic!("Unsupported seat position specififer: {}", c),
             }
         }
 
@@ -74,7 +74,7 @@ impl Seat {
 
     #[inline]
     fn id(&self) -> u128 {
-        self.row * 8 + self.column 
+        self.row * 8 + self.column
     }
 }
 
@@ -85,29 +85,38 @@ pub fn input_generator(input: &str) -> Vec<Seat> {
 }
 
 pub fn solve_part1(input: Vec<Seat>) -> u128 {
-    input.iter().map(Seat::id).max().expect("Expecting to have a max value")
+    input
+        .iter()
+        .map(Seat::id)
+        .max()
+        .expect("Expecting to have a max value")
 }
 
 pub fn solve_part2(input: Vec<Seat>) -> u128 {
-    let seat = input.iter()
+    let seat = input
+        .iter()
         .filter(|seat| {
             let last_first_row = Seat { row: 0, column: 7 };
-            let first_last_row = Seat { row: 127, column: 0};
+            let first_last_row = Seat {
+                row: 127,
+                column: 0,
+            };
             seat.id() > last_first_row.id() && seat.id() < first_last_row.id()
         })
-        .try_fold(None, |prev: Option<&Seat>, seat| {
-            match prev {
-                None => Ok(Some(seat)),
-                Some(prev) => {
-                    if prev.id() + 2 == seat.id() {
-                        Err(prev)
-                    } else {
-                        Ok(Some(seat))
-                    }
+        .try_fold(None, |prev: Option<&Seat>, seat| match prev {
+            None => Ok(Some(seat)),
+            Some(prev) => {
+                if prev.id() + 2 == seat.id() {
+                    Err(prev)
+                } else {
+                    Ok(Some(seat))
                 }
             }
         });
-    seat.err().expect("Got no seat that has an id 1 smaller than mine").id() + 1
+    seat.err()
+        .expect("Got no seat that has an id 1 smaller than mine")
+        .id()
+        + 1
 }
 
 #[cfg(test)]
